@@ -2,6 +2,7 @@
 # 如果下载的不是.off文件，则补需要执行此文件
 
 import os
+import argparse
 import numpy as np
 from plyfile import PlyData
 from plyfile import PlyElement
@@ -116,10 +117,16 @@ def write_ply_points_faces_from_off(ply_data_dir, off_data_dir):
             export_ply_points_faces(points,faces,out)
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root",default=os.path.dirname(__file__),help="path to dataset dir contains .off dirs")
+    args = parser.parse_args()
     # ply目标文件产生路径
-    ply_data_dir = '/home/rq/cloud_lesson/ModelNet40/ply_data_points'
+    ply_data_dir = os.path.join(args.root,"../../dataset/MobileNet40_ply_points")
+    if not os.path.exists(ply_data_dir):
+        os.makedirs(ply_data_dir)
+    # ply_data_dir = '/home/rq/cloud_lesson/ModelNet40/ply_data_points'
     # off文件所在路径
-    off_data_dir = '/home/rq/cloud_lesson/ModelNet40/off_data'
+    off_data_dir = os.path.join(args.root,"../../dataset/ModelNet40")
     write_ply_points_only_from_off(ply_data_dir, off_data_dir)
 
 if __name__ == '__main__':
