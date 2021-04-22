@@ -14,7 +14,7 @@ import numpy as np
 from torch.utils.data import Dataset
 
 class ModelNet40Dataset(Dataset):
-    def __init__(self, root_dir, ratio=0.8, random=True, train_mode=True, data_argument=True, jitter=True):
+    def __init__(self, root_dir, ratio=0.8, random=True, train_mode=True ,data_argument=True, jitter=True):
         '''
         @Args:
              root_dir:(String) root path to data dictory
@@ -58,7 +58,7 @@ class ModelNet40Dataset(Dataset):
         if self.random:
             random_index = np.random.choice(length, length ,replace=False)
         else:
-            random_index = np.array([i for i in range(length)])
+            random_index = np.arange(length)
         split_boundary = math.floor(length*self.ratio)
         train_index = random_index[0:split_boundary]
         val_index = random_index[split_boundary::]
@@ -98,7 +98,10 @@ class ModelNet40Dataset(Dataset):
         return point_set, label
         
     def __len__(self):
-        return len(self.data_list)
+        if self.train_mode:
+            return len(self.train_index)
+        else:
+            return len(self.val_index)
 
     @property
     def label_dict(self):
